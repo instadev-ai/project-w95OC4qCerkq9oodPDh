@@ -1,6 +1,17 @@
 import { Button } from "@/components/ui/button";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import { PlusCircle } from "lucide-react";
 import { motion } from "framer-motion";
+import { WorkoutForm } from "./WorkoutForm";
 
 export function DashboardHeader() {
   return (
@@ -24,16 +35,29 @@ export function DashboardHeader() {
         animate={{ opacity: 1, x: 0 }}
         transition={{ delay: 0.3, duration: 0.5 }}
       >
-        <Button>
-          <motion.div
-            whileHover={{ scale: 1.1 }}
-            whileTap={{ scale: 0.95 }}
-            className="flex items-center"
-          >
-            <PlusCircle className="mr-2 h-4 w-4" />
-            Log Workout
-          </motion.div>
-        </Button>
+        <Dialog>
+          <DialogTrigger asChild>
+            <Button>
+              <motion.div
+                whileHover={{ scale: 1.1 }}
+                whileTap={{ scale: 0.95 }}
+                className="flex items-center"
+              >
+                <PlusCircle className="mr-2 h-4 w-4" />
+                Log Workout
+              </motion.div>
+            </Button>
+          </DialogTrigger>
+          <DialogContent className="sm:max-w-[600px]">
+            <DialogHeader>
+              <DialogTitle>Log New Workout</DialogTitle>
+              <DialogDescription>
+                Record your workout details. Track your progress and celebrate your achievements.
+              </DialogDescription>
+            </DialogHeader>
+            <WorkoutForm />
+          </DialogContent>
+        </Dialog>
       </motion.div>
     </motion.div>
   );
