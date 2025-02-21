@@ -1,8 +1,35 @@
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { motion } from "framer-motion";
 
 interface WorkoutHistoryProps {
   detailed?: boolean;
 }
+
+const containerVariants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.1
+    }
+  }
+};
+
+const itemVariants = {
+  hidden: { 
+    opacity: 0,
+    x: -20
+  },
+  visible: { 
+    opacity: 1,
+    x: 0,
+    transition: {
+      type: "spring",
+      stiffness: 100,
+      damping: 15
+    }
+  }
+};
 
 export function WorkoutHistory({ detailed = false }: WorkoutHistoryProps) {
   const workouts = [
@@ -40,18 +67,36 @@ export function WorkoutHistory({ detailed = false }: WorkoutHistoryProps) {
 
   return (
     <ScrollArea className="h-[350px] pr-4">
-      <div className="space-y-8">
+      <motion.div 
+        variants={containerVariants}
+        initial="hidden"
+        animate="visible"
+        className="space-y-8"
+      >
         {workouts.map((workout, i) => (
-          <div key={i} className="flex">
+          <motion.div 
+            key={i} 
+            variants={itemVariants}
+            className="flex"
+          >
             <div className="flex w-[80px] flex-col items-center">
-              <div className="flex h-10 w-10 items-center justify-center rounded-full border border-primary/20 bg-primary/10 text-sm font-bold">
+              <motion.div 
+                className="flex h-10 w-10 items-center justify-center rounded-full border border-primary/20 bg-primary/10 text-sm font-bold"
+                whileHover={{ scale: 1.1 }}
+                whileTap={{ scale: 0.95 }}
+              >
                 {new Date(workout.date).getDate()}
-              </div>
+              </motion.div>
               {i !== workouts.length - 1 && (
                 <div className="h-full w-px bg-border" />
               )}
             </div>
-            <div className="flex-1 pb-8">
+            <motion.div 
+              className="flex-1 pb-8"
+              initial={{ opacity: 0, x: 20 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ delay: i * 0.1 }}
+            >
               <div className="flex items-center gap-4">
                 <div className="flex-1">
                   <h3 className="font-semibold">{workout.name}</h3>
@@ -68,23 +113,31 @@ export function WorkoutHistory({ detailed = false }: WorkoutHistoryProps) {
               </div>
               
               {detailed && (
-                <div className="mt-4 grid gap-2">
+                <motion.div 
+                  className="mt-4 grid gap-2"
+                  initial={{ opacity: 0, height: 0 }}
+                  animate={{ opacity: 1, height: "auto" }}
+                  transition={{ duration: 0.3 }}
+                >
                   {workout.exercises.map((exercise, j) => (
-                    <div
+                    <motion.div
                       key={j}
                       className="grid grid-cols-3 text-sm text-muted-foreground"
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: 0.2 + (j * 0.1) }}
                     >
                       <span>{exercise.name}</span>
                       <span>{exercise.sets}</span>
                       <span>{exercise.weight}</span>
-                    </div>
+                    </motion.div>
                   ))}
-                </div>
+                </motion.div>
               )}
-            </div>
-          </div>
+            </motion.div>
+          </motion.div>
         ))}
-      </div>
+      </motion.div>
     </ScrollArea>
   );
 }
